@@ -48,6 +48,11 @@ try:
     countdown(5)
     criticalexe(f"(echo d; echo d; echo d; echo d; echo d; echo d; echo w;) | sudo fdisk /dev/{diskname}")
     criticalexe(f"(echo g; echo n; echo 1; echo; echo '+550M'; echo y; echo n; echo 2; echo ; echo +2G; echo y; echo n; echo 3; echo ; echo ; echo y; echo t; echo 1; echo 1; echo y; echo t; echo 2; echo 19; echo y; echo w;) | sudo fdisk /dev/{diskname}")
+    criticalexe(f"mkfs.fat -F32 /dev/{diskname}1")
+    criticalexe(f"mkswap /dev/{diskname}2")
+    criticalexe(f"swapon /dev/{diskname}2")
+    criticalexe(f"mkfs.ext4 /dev/{diskname}3")
+    print("Partition has been done!")
 except Exception as e:
     pass
 except KeyboardInterrupt():
