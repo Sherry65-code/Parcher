@@ -16,16 +16,15 @@ while True:
 
 print("Scanning disks...")
 sleep(1)
-disks = sys("fdisk -l")
-disks = disks.split("Type")
+disks = sys("fdisk -l | grep 'Disk /'")
 clear()
 print("Disks avaliable are :")
-print(disks[1])
+print(disks)
 while True:
     diskname = input("Type diskname excluding the number (example - sda):")
     if "1" in diskname  or "2" in diskname  or "3" in diskname  or "4" in diskname  or "5" in diskname  or "6" in diskname  or "7" in diskname  or "8" in diskname  or "9" in diskname :
         print("No partition numbers to be included")
-    elif diskname in disks[1] :
+    elif diskname in disks :
         print("Proceeding to Other Customizations...")
         sleep(1)
         break
