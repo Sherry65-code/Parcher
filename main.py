@@ -53,6 +53,26 @@ try:
     criticalexe(f"swapon /dev/{diskname}2")
     criticalexe(f"mkfs.ext4 /dev/{diskname}3")
     print("Partition has been done!")
+    sleep(1)
+    print("Now starting installation of main system...")
+    sys(f"mount /dev/{diskname}3 /mnt")
+    clear()
+    print("Choose linux kernel:\n1. Normal\n2. LTS")
+    while True:
+        kernel = input("(1 or 2)>>")
+        if (kernel == "1"):
+            criticalexe("pacstrap /mnt base base-devel linux linux-firmware")
+            break
+        elif (kernel == "2"):
+            criticalexe("pacstrap /mnt base base-devel linux-lts linux-firmware")
+            break
+        else:
+            print("Wrong Argument. Try Again")
+            sleep(1)
+    clear()
+    print("Creating Installation Register...")
+    sleep(1)
+    criticalexe("genfstab -U /mnt >> /mnt/etc/fstab")
 except Exception as e:
     pass
 except KeyboardInterrupt():
