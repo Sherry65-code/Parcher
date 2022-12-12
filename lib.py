@@ -1,5 +1,6 @@
 from time import time
 from subprocess import run, PIPE
+from os import system
 def sleep(sleeptime):
     st = time()
     while (time()<st+sleeptime):
@@ -23,9 +24,11 @@ def sys(argument):
 def clear():
     run(["clear"])
 
+def criticalexe(cmd):
+    system(cmd)
+
 def countdown(howmuch):
     x = howmuch
     while x!=0:
         print(f"{x}")
         x-=1
-        
