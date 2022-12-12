@@ -16,7 +16,7 @@ while True:
 
 print("Scanning disks...")
 sleep(1)
-disks = sys("fdisk -l | grep 'Disk /'")
+disks = sys("fdisk -l")
 clear()
 print("Disks avaliable are :")
 print(disks)
