@@ -16,6 +16,8 @@ chmod a+x ./run.sh
   - It is faster than other installers and less crapy by removing the waste options.
   - We think that if the user uses the advanced options that he should not need this installer and install arch himself/herself.
   
+- Some issues with pacman which Arch Installation
+  - If git is not installating then press `Ctrl+D` on your keyboard and then try installing git.
 - Desktop Enviroments we support
   - [GNOME](https://gnome.org)
   - [KDE](https://kde.org)
