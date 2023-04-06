@@ -25,13 +25,21 @@ def displaydisks():
    system("lsblk | grep mmcblk")
 
 def partition(diskname):
-    system("fdisk -l > disks.txt")
+    system("lsblk --nodeps -o NAME > disks.txt")
     f = open("disks.txt", "r")
     fdata = f.read()
     f.close()
+    fdata = fdata.replace("NAME","")
     if f"{diskname}" in fdata:
         print("Suceeding to Partition Stage...")
         return True
     else:
         print("Wrong Diskname, Try Again!")
         return False
+
+def bootname():
+    # check if the system is UEFI or BIOS
+    if system("ls /sys/firmware/efi/efivars") == 0:
+        return "EFI"
+    else:
+        return "BIOS"
