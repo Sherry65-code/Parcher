@@ -31,6 +31,8 @@ chmod a+x ./run.sh
 - Desktop Enviroments we support
   - [GNOME](https://gnome.org)
   - [KDE](https://kde.org)
+  - [XFCE](https://xfce.org)
+  - [OPENBOX](https://openbox.org) 
   - More options to be added soon.
   
 - AUR helpers we support
