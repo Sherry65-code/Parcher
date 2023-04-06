@@ -118,7 +118,7 @@ if system(f"pacstrap -K /mnt base base-devel {kerneltype} linux-firmware") == 0:
         sleep(1)
         print("Now transfering control to /mnt/future.py")
         # Then go chroot and run this command in chroot
-        system("(echo 'python3 /mnt/future.py';) | arch-chroot /mnt")
+        system("arch-chroot /mnt | python3 /mnt/future.py")
         # Getting Control back
         # Now first unmount all disks and prompt userthat the system will reboot
         system("umount -R /mnt")
