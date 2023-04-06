@@ -12,10 +12,26 @@ def check_net():
         return False
 
 # Clear the user screen
-def clear_screen():
+def clear():
     system("clear")
 
 def sleep(sleeptime):
     st = time()
     while time()<st+sleeptime:
         pass
+def displaydisks():
+   system("lsblk | grep sda")
+   system("lsblk | grep nvme")
+   system("lsblk | grep mmcblk")
+
+def partition(diskname):
+    system("fdisk -l > disks.txt")
+    f = open("disks.txt", "r")
+    fdata = f.read()
+    f.close()
+    if f"{diskname}" in fdata:
+        print("Suceeding to Partition Stage...")
+        return True
+    else:
+        print("Wrong Diskname, Try Again!")
+        return False

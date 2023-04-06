@@ -19,5 +19,10 @@ while True:
 # They can be of 3 types -> /dev/sda, /dev/nvme0n1 or /dev/mmcblk0
 
 print("========CHOOSE A HARD DISK TO INSTALL SYSTEM ON=========")
-system("lsblk | grep sd | grep nvme | grep mmcblk")
-
+displaydisks()
+while True:
+    disk = input("Type disk name (/dev/sda) >>")
+    if partition(disk):
+        break
+    else:
+        pass
