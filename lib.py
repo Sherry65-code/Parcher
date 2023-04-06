@@ -6,7 +6,7 @@ from os import system
 
 # Return false is internet is disconnected else returns true
 def check_net():
-    if system('ping google.com -c 1') == 0:
+    if system('ping google.com -c 1 &> /dev/null') == 0:
         return True
     else:
         return False
