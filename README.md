@@ -5,7 +5,7 @@
 ## Stages completed
   - [x] InterNet Check
   - [x] Partition
-  - [ ] chroot
+  - [x] chroot
   - [ ] System setup
   - [ ] Boot configuration
   - [ ] Desktop Enviroment or Window manager setup

@@ -113,12 +113,13 @@ if system(f"pacstrap -K /mnt base base-devel {kerneltype} linux-firmware python"
     f.write(f"{disk}")
     f.close()
     system("cp ./bootdrive.txt /mnt/")
-    if system("cp ./future.py /mnt/") == 0:
+    system("cp ./deliver.sh /mnt")
+    if system("cp ./future.c /mnt") == 0:
         print("File Transfer sucessful to /mnt")
         sleep(1)
         print("Now transfering control to /mnt/future.py")
         # Then go chroot and run this command in chroot
-        system("arch-chroot /mnt | python3 /mnt/future.py")
+        system("arch-chroot /mnt | (chmod a+x ./deliver.sh && ./deliver.sh)")
         # Getting Control back
         # Now first unmount all disks and prompt userthat the system will reboot
         system("umount -R /mnt")
