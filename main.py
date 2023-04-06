@@ -96,8 +96,8 @@ while True:
 sleep(1)
 clear()
 print("Installing Base Packages...")
-print(f"PACKAGES LIST\n{kerneltype}\nlinux-firmware\nbase\nbase-devel")
-if system(f"pacstrap -K /mnt base base-devel {kerneltype} linux-firmware") == 0:
+print(f"PACKAGES LIST\n{kerneltype}\nlinux-firmware\nbase\nbase-devel\npython")
+if system(f"pacstrap -K /mnt base base-devel {kerneltype} linux-firmware python") == 0:
     clear()
     print("Installed Base system")
     sleep(1)
