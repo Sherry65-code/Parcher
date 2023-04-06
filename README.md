@@ -1,5 +1,13 @@
 # Parcher
 
+## Stages completed
+  - [x] InterNet Check
+  - [x] Partition
+  - [ ] chroot
+  - [ ] System setup
+  - [ ] Boot configuration
+  - [ ] Desktop Enviroment or Window manager setup
+
 ## Documentation
 
 - How to run our installer
