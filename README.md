@@ -1,5 +1,7 @@
 # Parcher
 
+**NOTE-** This project is under development currently. Join us by contributing to this project. :)
+
 ## Stages completed
   - [x] InterNet Check
   - [x] Partition
