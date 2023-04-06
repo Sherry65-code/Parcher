@@ -40,11 +40,8 @@ mkpart primary ext4 2551MiB 100%"
             system(f"swapon /dev/{disk}2")
             system(f"mkfs.ext4 /dev/{disk}3")
             # Mounting
-            cmds = [f"mount /dev/{disk}3 /mnt","mkdir /mnt/boot/EFI",f"mount /dev/{disk}1 /mnt/boot/EFI"]
-            x = 0
-            while x<3:
-                system(cmds[x])
-                x+=1
+            cmds = f"mount /dev/{disk}3 /mnt"
+            system(cmds)
             # After Partiotin COntinue
         else:
             #BIOS Stuff here
@@ -57,11 +54,8 @@ mkpart primary ext4 2551MiB 100%"
             system(f"mkfs.fat -F32 /dev/{disk}1")
             system(f"mkswap /dev/{disk}2")
             system(f"mkfs.ext4 /dev/{disk}3")
-            cmds = [f"mount /dev/{disk}3 /mnt",f"mkdir /mnt/boot",f"mount /dev/{disk}1 /mnt/boot"]
-            x = 0
-            while x<3:
-               system(cmds[x])
-               x+=1
+            cmds = f"mount /dev/{disk}3 /mnt"
+            system(cmds)
         # Then Continue to common part
         print("Partition Completed Sucessfully :)") 
 

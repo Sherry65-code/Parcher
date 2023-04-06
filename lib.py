@@ -39,7 +39,7 @@ def partition(diskname):
 
 def bootname():
     # check if the system is UEFI or BIOS
-    if system("ls /sys/firmware/efi/efivars") == 0:
+    if system("ls /sys/firmware/efi/efivars &> /dev/null") == 0:
         return "EFI"
     else:
         return "BIOS"
