@@ -1,34 +1,21 @@
+# This file handles all the lower level work required for installing arch linux
+
 from time import time
-from subprocess import run, PIPE
 from os import system
+
+
+# Return false is internet is disconnected else returns true
+def check_net():
+    if system('ping google.com -c 1') == 0:
+        return True
+    else:
+        return False
+
+# Clear the user screen
+def clear_screen():
+    system("clear")
+
 def sleep(sleeptime):
     st = time()
-    while (time()<st+sleeptime):
+    while time()<st+sleeptime:
         pass
-
-def testNetwork():
-    nettest = run(["ping","-c","1", "google.com"], stdout=PIPE)
-    if "1 packets transmitted" in nettest.stdout.decode():
-        return True
-    return False
-
-def sys(argument):
-    mainarg = argument.split(" ")
-    outer = run(mainarg, stdout=PIPE, stderr=PIPE)
-    if "denied" in outer.stderr.decode():
-        argument = f"sudo {argument}"
-        mainarg = argument.split(" ")
-        outer = run(mainarg, stdout=PIPE)
-    return outer.stdout.decode()
-
-def clear():
-    run(["clear"])
-
-def criticalexe(cmd):
-    system(cmd)
-
-def countdown(howmuch):
-    x = howmuch
-    while x!=0:
-        print(f"{x}")
-        x-=1

@@ -1,7 +1,5 @@
 # Parcher
 
-**NOTE -** We have discontinued the development of Parcher. We will resume the development of this project from 1st of April. It's not a _april fool joke_. We have also decided to rewrite this software in C instead of Python.
-
 ## Documentation
 
 - How to run our installer
