@@ -40,7 +40,7 @@ mkpart primary ext4 2551MiB 100%"
             system(f"swapon /dev/{disk}2")
             system(f"mkfs.ext4 /dev/{disk}3")
             # Mounting
-            cmds = [f"mount /dev/{disk}3 /mnt","mkdir /mnt/boot",f"mount /dev/{disk}1 /mnt/boot/efi"]
+            cmds = [f"mount /dev/{disk}3 /mnt","mkdir /mnt/boot/EFI",f"mount /dev/{disk}1 /mnt/boot/EFI"]
             x = 0
             while x<3:
                 system(cmds[x])
