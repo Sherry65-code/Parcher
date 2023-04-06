@@ -63,3 +63,71 @@ mkpart primary ext4 2551MiB 100%"
         break
     else:
         pass
+
+# Now prompt user for choosing a linux kernel
+
+clear()
+
+print("==========BASE=SYSTEM=INSTALL==============")
+print("OPTIONS FOR LINUX KERNEL:")
+print("1. Linux\n2. Linux LTS\n3. Linux ZEN")
+while True:
+    kernel = input("Choose any one kernel:")
+    if kernel == "1" or kernel.lower().replace(" ", "") == "linux":
+        # Chose Linux
+        kerneltype = "linux"
+        break
+    elif kernel == "2" or kernel.lower().replace(" ", "").replace("-","") == "linuxlts":
+        # Chose Linux LTS
+        kerneltype = "linux-lts"
+        break
+    elif kernel == "3" or kernel.lower().replace(" ", "").replace("-","") == "linuxzen":
+        # Chose Linux Zen
+        kerneltype = "linux-zen"
+        break
+    elif kernel.replace(" ","") == "":
+        # default user case - linux
+        kerneltype = "linux"
+        break
+    else:
+        # wrong input
+        print("Wrong Option, try again!")
+
+sleep(1)
+clear()
+print("Installing Base Packages...")
+print(f"PACKAGES LIST\n{kerneltype}\nlinux-firmware\nbase\nbase-devel")
+if system(f"pacstrap -K /mnt base base-devel {kerneltype} linux-firmware") == 0:
+    clear()
+    print("Installed Base system")
+    sleep(1)
+    print("Creating genfstab")
+    system("genfstab -U /mnt >> /mnt/etc/fstab")
+    print("Created genfstab")
+    sleep(1)
+    clear()
+    print("Preparing to CHROOT into /mnt...")
+    # Now need to transfer all the load after chrooting to arch-chroot /mnt
+    # First transfer future.py file to /mnt
+    f = open("bootdrive.txt", "w")
+    f.write(f"{disk}")
+    f.close()
+    system("cp ./bootdrive.txt /mnt/")
+    if system("cp ./future.py /mnt/") == 0:
+        print("File Transfer sucessful to /mnt")
+        sleep(1)
+        print("Now transfering control to /mnt/future.py")
+        # Then go chroot and run this command in chroot
+        system("(echo 'python3 /mnt/future.py';) | arch-chroot /mnt")
+        # Getting Control back
+        # Now first unmount all disks and prompt userthat the system will reboot
+        system("umount -R /mnt")
+        print("Your system is going down for reboot in 5s. Press Ctrl+C to cancel reboot")
+        sleep(5)
+        clear()
+        print("HAPPY ARCH :)")
+        sleep(2)
+        system("reboot")
+else:
+    print("Kernel Installation Failed.\nTry mounting /mnt by typing mount /dev/sda3\nThen if its sucessful you can type this command to continue -> ~/run.sh\n Please troubleshoot the issue or post the issue on github at Sherry65-code/Parcher")
+
