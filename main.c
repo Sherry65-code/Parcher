@@ -85,7 +85,7 @@ int verifyBootName(char *bootname) {
 struct UserInfo {
 	char *name;
 	char *hostname;
-	char *kernel;
+	char **kernel;
 	char *disk;
 	char isSecureBoot;
 };
@@ -136,20 +136,20 @@ int main(int argc, char *argv) {
 	system("lsblk | grep mmcblk");
 	while (1) {
 		printf("Type disk name (sda):");
-		scanf("%ms99", &user.disk);
+		scanf("%s", &user.disk);
 		if (user.disk == NULL) {
 		printf("Error: disk name not set\n");
 			return 1;
 		}
 
-		if (verifyBootName(user.disk)) {
+		if (verifyBootName(&(*(user.disk)))) {
 			break;
 		}
 		else {
 			printf("Wrong Boot Drive. Try Again !\n");
 		}
 	}
-	printf("Partitioning %s\n", user.disk);
+	printf("Partitioning %s\n", *(user.disk));
 	sleep(1);
 	// Partition Code
 	clearString(cmd, sizeof(cmd));
@@ -157,41 +157,41 @@ int main(int argc, char *argv) {
 mkpart primary fat32 1MiB 551MiB \
 set 1 esp on \
 mkpart primary linux-swap 551MiB 2551MiB \
-mkpart primary ext4 2551MiB 100%%", user.disk);
+mkpart primary ext4 2551MiB 100%%", *(user.disk));
     // Apply Partition
 	system(cmd);
 	// Then format drive
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "mkfs.fat -F32 /dev/%s1", user.disk);
+	sprintf(cmd, "mkfs.fat -F32 /dev/%s1", *(user.disk));
 	system(cmd);
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "mkswap /dev/%s2", user.disk);
+	sprintf(cmd, "mkswap /dev/%s2", *(user.disk));
 	system(cmd);
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "swapon /dev/%s2", user.disk);
+	sprintf(cmd, "swapon /dev/%s2", *(user.disk));
 	system(cmd);
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "mkfs.ext4 /dev/%s3", user.disk);
+	sprintf(cmd, "mkfs.ext4 /dev/%s3", *(user.disk));
 	system(cmd);
 	clearString(cmd, sizeof(cmd));
 	// After formatting Mount drive
-	printf("Mounting %s", user.disk);
-	sprintf(cmd2, "mount /dev/%s3 /mnt", user.disk);
+	printf("Mounting %s", *(user.disk));
+	sprintf(cmd2, "mount /dev/%s3 /mnt", *(user.disk));
 	system(cmd2);
 	clearString(cmd, sizeof(cmd));
-	printf("Mounted %s", user.disk);
+	printf("Mounted %s", *(user.disk));
 	sleep(1);
 	clear();
 	printf("Select a Linux Kernel\n1. Linux\n2. Linux LTS\n3.Linux Zen\n(1)>>");
 	scanf("%d", &kchoice);
 	if (kchoice == 1) {
-   		user.kernel = strdup("linux");
+   		*(user.kernel) = "linux";
 	}
 	else if (kchoice == 2) {
-   		user.kernel = strdup("linux-lts");
+   		*(user.kernel) = "linux-lts";
 	}
 	else if (kchoice == 3) {
-   	user.kernel = strdup("linux-zen");
+   		*(user.kernel) = "linux-zen";
 	}
 
 	clear();
@@ -264,28 +264,28 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	sprintf(cmd, "arch-chroot /mnt echo '127.0.1.1    %s.localdomain    %s' > /etc/hosts", user.hostname, user.hostname);
 	system(cmd);
 	printf("Type your username:");
-	scanf("%s", user.name);
+	scanf("%s", &user.name);
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "arch-chroot /mnt useradd -m %s", user.name);
+	sprintf(cmd, "arch-chroot /mnt useradd -m %s", *(user.name));
 	system(cmd);
-	printf("Now type password for %s:", user.name);
+	printf("Now type password for %s:", *(user.name));
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "arch-chroot /mnt passwd %s", user.name);
+	sprintf(cmd, "arch-chroot /mnt passwd %s", *(user.name));
 	system(cmd);
 	printf("Installing sudo...\n");
 	system("arch-chroot /mnt pacman -S sudo --noconfirm");
 	clear();
-	printf("Adding %s to wheel group...\n", user.name);
+	printf("Adding %s to wheel group...\n", *(user.name));
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "arch-chroot /mnt usermod -aG wheel,video,audio,optical,storage %s", user.name);
+	sprintf(cmd, "arch-chroot /mnt usermod -aG wheel,video,audio,optical,storage %s", *(user.name));
 	system(cmd);
-	printf("Giving %s user privelleges...\n", user.name);
+	printf("Giving %s user privelleges...\n", *(user.name));
 	system("arch-chroot /mnt echo 'root ALL=(ALL:ALL) ALL' > /etc/sudoers");
 	system("arch-chroot /mnt echo 'wheel ALL=(ALL:ALL) ALL' >> /etc/sudoers");
 	system("arch-chroot /mnt echo '@includedir /etc/sudoers.d' >> /etc/sudoers");
 	printf("Setting UEFI Partition...\n");
 	clearString(cmd, sizeof(cmd));
-	sprintf(cmd, "arch-chroot /mnt mount --mkdir /dev/%s1 /boot/EFI", user.disk);
+	sprintf(cmd, "arch-chroot /mnt mount --mkdir /dev/%s1 /boot/EFI", *(user.disk));
 	system(cmd);
 	printf("Installing GRUB...\n");
 	system("arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools os-prober --noconfirm");
