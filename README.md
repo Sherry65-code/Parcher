@@ -6,9 +6,9 @@
   - [x] InterNet Check
   - [x] Partition
   - [x] chroot
-  - [ ] System setup
-  - [ ] Boot configuration
-  - [ ] Desktop Enviroment or Window manager setup
+  - [x] System setup
+  - [x] Boot configuration
+  - [x] Desktop Enviroment or Window manager setup
 
 ## Documentation
 
