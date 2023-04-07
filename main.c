@@ -8,6 +8,7 @@ int isUEFI();
 void clear();
 int verifyBootName(char *bootname);
 char* read_file(const char *filename);
+void clearString(char str[], int size);
 
 char* read_file(const char* filename) {
     FILE* fp = fopen(filename, "r");
@@ -82,29 +83,27 @@ int verifyBootName(char *bootname) {
 	}
 }	
 struct UserInfo {
-	char *username;
+	char *name;
 	char *hostname;
 	char *kernel;
 	char *disk;
 	char isSecureBoot;
 };
 
-int main(int argc, char **argv) {
+void clearString(char str[], int size) {
+	for (int i = 0;i<size;i++) {
+		str[i] = '\0';
+	}
+}
+int main(int argc, char *argv) {
 	// Initialize struct
 	// I used struct to seperate variable from main
 	// All the variables declared in main are temporary and not to be used afterwards
-	struct UserInfo user = {
-		.username = NULL,
-		.hostname = NULL,
-		.kernel = NULL,
-		.disk = NULL,
-		.isSecureBoot = 0	
-	};
+	struct UserInfo user;
 
-
-	char cmd[512];
-	char cmd2[100];
-	char cmd3[200];
+	char cmd[300];
+	char cmd2[300];
+	char cmd3[300];
 	int kchoice;
 	char op1;	
 	// Clear screen
@@ -153,6 +152,7 @@ int main(int argc, char **argv) {
 	printf("Partitioning %s\n", user.disk);
 	sleep(1);
 	// Partition Code
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "parted /dev/%s --script mktable gpt \
 mkpart primary fat32 1MiB 551MiB \
 set 1 esp on \
@@ -161,18 +161,24 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
     // Apply Partition
 	system(cmd);
 	// Then format drive
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "mkfs.fat -F32 /dev/%s1", user.disk);
 	system(cmd);
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "mkswap /dev/%s2", user.disk);
 	system(cmd);
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "swapon /dev/%s2", user.disk);
 	system(cmd);
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "mkfs.ext4 /dev/%s3", user.disk);
 	system(cmd);
+	clearString(cmd, sizeof(cmd));
 	// After formatting Mount drive
 	printf("Mounting %s", user.disk);
 	sprintf(cmd2, "mount /dev/%s3 /mnt", user.disk);
 	system(cmd2);
+	clearString(cmd, sizeof(cmd));
 	printf("Mounted %s", user.disk);
 	sleep(1);
 	clear();
@@ -190,8 +196,10 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 
 	clear();
 	printf("INSTALLING BASE SYSTEM\n");
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd3, "pacstrap /mnt base %s linux-firmware base-devel", user.kernel);
 	sleep(1);
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd3, "pacstrap -K /mnt base base-devel linux-firmware %s", user.kernel);
    	system(cmd3);
 	printf("Creating fstab...\n");
@@ -208,13 +216,17 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 		if (op1 == 's') {
 			// Search
 			printf("Type term to search:");
+			clearString(cmd2, sizeof(cmd2));
 			scanf("%s", cmd2);
+			clearString(cmd, sizeof(cmd));
 			sprintf(cmd, "cat timelist.txt | grep %s", cmd2);
 			system(cmd);
 		}
 		else if (op1 == 'e') {
 			// Directly Edit
+			clearString(cmd, sizeof(cmd));
 			printf("Type timezone Continent/Region :");
+			clearString(cmd2, sizeof(cmd2));
 			scanf("%s", cmd2);
 			sprintf(cmd, "arch-chroot /mnt ln -sf /usr/share/zoneinfo/%s /etc/localtime", cmd2);
 			if (system(cmd) == 0) {
@@ -239,6 +251,7 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	printf("Locale Set\n");
 	printf("Type the name of the machine you want to keep:");
 	scanf("%s", user.hostname);
+	clearString(cmd2, sizeof(cmd2));
 	sprintf(cmd2, "arch-chroot /mnt echo '%s' > /etc/hostname", user.hostname);
 	system(cmd2);
 	printf("Type password for root user:");
@@ -247,26 +260,31 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	printf("Now setting up network services...\n");
 	system("arch-chroot /mnt echo '127.0.0.1    localhost' >> /etc/hosts");
 	system("arch-chroot /mnt echo '::1          localhost' >> /etc/hosts");
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "arch-chroot /mnt echo '127.0.1.1    %s.localdomain    %s' > /etc/hosts", user.hostname, user.hostname);
 	system(cmd);
 	printf("Type your username:");
-	scanf("%s", user.username);
-	sprintf(cmd, "arch-chroot /mnt useradd -m %s", user.username);
+	scanf("%s", user.name);
+	clearString(cmd, sizeof(cmd));
+	sprintf(cmd, "arch-chroot /mnt useradd -m %s", user.name);
 	system(cmd);
-	printf("Now type password for %s:", user.username);
-	sprintf(cmd, "arch-chroot /mnt passwd %s", user.username);
+	printf("Now type password for %s:", user.name);
+	clearString(cmd, sizeof(cmd));
+	sprintf(cmd, "arch-chroot /mnt passwd %s", user.name);
 	system(cmd);
 	printf("Installing sudo...\n");
 	system("arch-chroot /mnt pacman -S sudo --noconfirm");
 	clear();
-	printf("Adding %s to wheel group...\n", user.username);
-	sprintf(cmd, "arch-chroot /mnt usermod -aG wheel,video,audio,optical,storage %s", user.username);
+	printf("Adding %s to wheel group...\n", user.name);
+	clearString(cmd, sizeof(cmd));
+	sprintf(cmd, "arch-chroot /mnt usermod -aG wheel,video,audio,optical,storage %s", user.name);
 	system(cmd);
-	printf("Giving %s user privelleges...\n", user.username);
+	printf("Giving %s user privelleges...\n", user.name);
 	system("arch-chroot /mnt echo 'root ALL=(ALL:ALL) ALL' > /etc/sudoers");
 	system("arch-chroot /mnt echo 'wheel ALL=(ALL:ALL) ALL' >> /etc/sudoers");
 	system("arch-chroot /mnt echo '@includedir /etc/sudoers.d' >> /etc/sudoers");
 	printf("Setting UEFI Partition...\n");
+	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "arch-chroot /mnt mount --mkdir /dev/%s1 /boot/EFI", user.disk);
 	system(cmd);
 	printf("Installing GRUB...\n");
