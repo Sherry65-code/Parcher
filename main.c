@@ -7,36 +7,37 @@ int isInternetAvaliable();
 int isUEFI();
 void clear();
 int verifyBootName(char *bootname);
-char* read_file(char *filename);
+char* read_file(const char *filename);
 
-char* read_file(char *filename) {
-    FILE *fp;
-    char *buffer;
-    long file_size;
-
-    // Open file for reading
-    fp = fopen(filename, "r");
+char* read_file(const char* filename) {
+    FILE* fp = fopen(filename, "r");
     if (fp == NULL) {
-        printf("Error: could not open file '%s'\n", filename);
+        fprintf(stderr, "Error: could not open file '%s'\n", filename);
         return NULL;
     }
 
     // Get file size
     fseek(fp, 0L, SEEK_END);
-    file_size = ftell(fp);
+    long file_size = ftell(fp);
     rewind(fp);
 
     // Allocate memory for buffer
-    buffer = (char *) malloc(file_size + 1);
+    char* buffer = (char*) malloc(file_size + 1);
     if (buffer == NULL) {
-        printf("Error: could not allocate memory for file '%s'\n", filename);
+        fprintf(stderr, "Error: could not allocate memory for file '%s'\n", filename);
         fclose(fp);
         return NULL;
     }
 
     // Read file into buffer
-    fread(buffer, sizeof(char), file_size, fp);
-    buffer[file_size] = '\0';
+    size_t bytes_read = fread(buffer, sizeof(char), file_size, fp);
+    if (bytes_read < file_size) {
+        fprintf(stderr, "Error: could not read file '%s'\n", filename);
+        fclose(fp);
+        free(buffer);
+        return NULL;
+    }
+    buffer[bytes_read] = '\0';
 
     // Close file and return buffer
     fclose(fp);
@@ -72,9 +73,11 @@ int verifyBootName(char *bootname) {
 		return 0;
 	}
 	if (strstr(drivelist, bootname) != NULL) {
+		free(drivelist);
 		return 1;
 	}
 	else {
+		free(drivelist);
 		return 0;
 	}
 }	
@@ -176,17 +179,15 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	printf("Select a Linux Kernel\n1. Linux\n2. Linux LTS\n3.Linux Zen\n(1)>>");
 	scanf("%d", &kchoice);
 	if (kchoice == 1) {
-		user.kernel = "linux";
+   		user.kernel = strdup("linux");
 	}
 	else if (kchoice == 2) {
-		user.kernel = "linux-lts";
+   		user.kernel = strdup("linux-lts");
 	}
 	else if (kchoice == 3) {
-		user.kernel = "linux-zen";
+   	user.kernel = strdup("linux-zen");
 	}
-	else {
-		user.kernel = "linux";
-	}
+
 	clear();
 	printf("INSTALLING BASE SYSTEM\n");
 	sprintf(cmd3, "pacstrap /mnt base %s linux-firmware base-devel", user.kernel);
@@ -203,7 +204,7 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	system("timedatectl list-timezones > timelist.txt");
 	while (1) {
 		printf("Type s to search for timezone and e to enter timezone:");
-		scanf("%c", &op1);
+		scanf(" %c", &op1);
 		if (op1 == 's') {
 			// Search
 			printf("Type term to search:");
@@ -271,7 +272,7 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	printf("Installing GRUB...\n");
 	system("arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools os-prober --noconfirm");
 	printf("Does your system support Secure Boot (y/N):");
-	scanf("%c", &user.isSecureBoot);
+	scanf(" %c", &user.isSecureBoot);
 	if (user.isSecureBoot == 'y') {
 		if (system("arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --modules='tpm' --disable-shim-lock --recheck") == 0) {
 			printf("Generating Grub Configuration file...");
@@ -304,7 +305,7 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	char ch;
 	while (1) {
 		printf(">>");
-		scanf("%c", ch);
+		scanf(" %c", &ch);
 		if (ch == '1') {
 			// GNOME
 			system("arch-chroot /mnt pacman -S xorg xorg-server gnome gdm --noconfirm");
