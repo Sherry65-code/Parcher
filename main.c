@@ -136,7 +136,7 @@ int main(int argc, char *argv) {
 	system("lsblk | grep mmcblk");
 	while (1) {
 		printf("Type disk name (sda):");
-		scanf("%ms", user.disk);
+		scanf("%ms", &(user.disk));
 		if (user.disk == NULL) {
 		printf("Error: disk name not set\n");
 			return 1;
@@ -250,7 +250,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 	system("arch-chroot /mnt locale-gen");	
 	printf("Locale Set\n");
 	printf("Type the name of the machine you want to keep:");
-	scanf("%ms", user.hostname);
+	scanf("%ms", &user.hostname);
 	clearString(cmd2, sizeof(cmd2));
 	sprintf(cmd2, "arch-chroot /mnt echo '%s' > /etc/hostname", user.hostname);
 	system(cmd2);
@@ -264,7 +264,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 	sprintf(cmd, "arch-chroot /mnt echo '127.0.1.1    %s.localdomain    %s' > /etc/hosts", user.hostname, user.hostname);
 	system(cmd);
 	printf("Type your username:");
-	scanf("%ms", user.name);
+	scanf("%ms", &user.name);
 	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "arch-chroot /mnt useradd -m %s", *(user.name));
 	system(cmd);
