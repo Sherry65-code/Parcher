@@ -290,24 +290,29 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 			// GNOME
 			system("arch-chroot /mnt pacman -S xorg xorg-server gnome gdm --noconfirm");
 			system("arch-chroot /mnt systemctl enable gdm");
+			break;
 		}
 		else if (kchoice == 2) {
 			// KDE Plasma
 			system("arch-chroot /mnt pacman -S xorg plasma plasma-meta doplhin konsole sddm --noconfirm");
 			system("arch-chroot /mnt systemctl enable sddm");
+			break;
 		}
 		else if (kchoice == 3) {
 			// XFCE
 			system("arch-chroot /mnt pacman -S install xfce4 xfce4-goodies lightdm xorg --noconfirm");
 			system("arch-chroot /mnt systemctl enable lightdm");
+			break;
 		}
 		else if (kchoice == 4) {
 			// Openbox
 			system("arch-chroot /mnt pacman -S openbox lightdm xorg --noconfirm");
 			system("arch-chroot /mnt systemctl enable lightdm");
+			break;
 		}
 		else if (kchoice == 5) {
 			// None
+			break;
 		}
 		else {
 			printf("Wrong Choice, choice doesnt exist :(\n");
