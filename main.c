@@ -137,12 +137,7 @@ int main(int argc, char *argv) {
 	while (1) {
 		printf("Type disk name (sda):");
 		scanf("%ms", &(user.disk));
-		if (user.disk == NULL) {
-		printf("Error: disk name not set\n");
-			return 1;
-		}
-
-		if (verifyBootName(&(*(user.disk)))) {
+		if (verifyBootName(user.disk)) {
 			break;
 		}
 		else {
