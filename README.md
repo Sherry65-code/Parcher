@@ -35,9 +35,6 @@ chmod a+x ./run.sh
   - [OPENBOX](https://openbox.org) 
   - More options to be added soon.
   
-- AUR helpers we support
-  - Yay
-
 - Contributers
   - [Hecker](https://github.com/Sherry65-code)
   - [Sahil-Sagwekar](https://github.com/sahil-sagwekar2652)
