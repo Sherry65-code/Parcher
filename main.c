@@ -97,9 +97,6 @@ int main(int argc, char **argv) {
 		.disk = NULL,
 		.isSecureBoot = 0	
 	};
-	// Only for test
-	// <<>>
-	scanf("%s", user.username);
 
 
 	char cmd[512];
@@ -304,34 +301,35 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	clear();
 	printf("CHOOSE A DESKTOP ENVIROMENT TO INSTALL\n");
 	printf("1. GNOME\n2. KDE Plasma\n3. XFCE\n4. OpenBox\n5. None\n");
+	char ch;
 	while (1) {
 		printf(">>");
-		scanf("%d", &kchoice);
-		if (kchoice == 1) {
+		scanf("%c", ch);
+		if (ch == '1') {
 			// GNOME
 			system("arch-chroot /mnt pacman -S xorg xorg-server gnome gdm --noconfirm");
 			system("arch-chroot /mnt systemctl enable gdm");
 			break;
 		}
-		else if (kchoice == 2) {
+		else if (ch == '2') {
 			// KDE Plasma
 			system("arch-chroot /mnt pacman -S xorg plasma plasma-meta doplhin konsole sddm --noconfirm");
 			system("arch-chroot /mnt systemctl enable sddm");
 			break;
 		}
-		else if (kchoice == 3) {
+		else if (ch == '3') {
 			// XFCE
 			system("arch-chroot /mnt pacman -S install xfce4 xfce4-goodies lightdm xorg --noconfirm");
 			system("arch-chroot /mnt systemctl enable lightdm");
 			break;
 		}
-		else if (kchoice == 4) {
+		else if (ch == '4') {
 			// Openbox
 			system("arch-chroot /mnt pacman -S openbox lightdm xorg --noconfirm");
 			system("arch-chroot /mnt systemctl enable lightdm");
 			break;
 		}
-		else if (kchoice == 5) {
+		else if (kchoice == '5') {
 			// None
 			break;
 		}
