@@ -66,6 +66,11 @@ int isUEFI() {
 int verifyBootName(char *bootname) {
 	system("lsblk --nodeps -o NAME > disks.txt");
 	char *drivelist = read_file("disks.txt");
+	if (drivelist == NULL) {
+		printf("Error: could not read disk list from file\n");
+		return 0;
+	}
+	char *drivelist = read_file("disks.txt");
 	if (strstr(drivelist, bootname) != NULL) {
 		return 1;
 	}
@@ -85,7 +90,13 @@ int main(int argc, char **argv) {
 	// Initialize struct
 	// I used struct to seperate variable from main
 	// All the variables declared in main are temporary and not to be used afterwards
-	struct UserInfo user;
+	struct UserInfo user = {
+		.username = NULL,
+		.hostname = NULL,
+		.kernel = NULL,
+		.disk = NULL,
+		.isSecureBoot = 0	
+	};
 	char cmd[512];
 	char cmd2[100];
 	char cmd3[200];
@@ -121,7 +132,12 @@ int main(int argc, char **argv) {
 	system("lsblk | grep mmcblk");
 	while (1) {
 		printf("Type disk name (sda):");
-		scanf("%ms", &user.disk);
+		scanf("%ms99", &user.disk);
+		if (user.disk == NULL) {
+		printf("Error: disk name not set\n");
+			return 1;
+		}
+
 		if (verifyBootName(user.disk)) {
 			break;
 		}
@@ -171,7 +187,7 @@ mkpart primary ext4 2551MiB 100%%", user.disk);
 	}
 	clear();
 	printf("INSTALLING BASE SYSTEM\n");
-	printf("Base Packages are\n1. %s\n2. linux-firmware\n3. base\n4. base-devel\n", user.kernel);
+	sprintf(cmd3, "pacstrap /mnt base %s linux-firmware base-devel", user.kernel);
 	sleep(1);
 	sprintf(cmd3, "pacstrap -K /mnt base base-devel linux-firmware %s", user.kernel);
    	system(cmd3);
