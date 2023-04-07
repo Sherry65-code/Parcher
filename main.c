@@ -136,7 +136,7 @@ int main(int argc, char *argv) {
 	system("lsblk | grep mmcblk");
 	while (1) {
 		printf("Type disk name (sda):");
-		scanf("%s", &user.disk);
+		scanf("%ms", &user.disk);
 		if (user.disk == NULL) {
 		printf("Error: disk name not set\n");
 			return 1;
