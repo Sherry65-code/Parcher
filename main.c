@@ -7,8 +7,9 @@ int isInternetAvaliable();
 int isUEFI();
 void clear();
 int verifyBootName(char *bootname);
+char* read_file(char *filename);
 
-char *read_file(char *filename) {
+char* read_file(char *filename) {
     FILE *fp;
     char *buffer;
     long file_size;
@@ -70,7 +71,6 @@ int verifyBootName(char *bootname) {
 		printf("Error: could not read disk list from file\n");
 		return 0;
 	}
-	char *drivelist = read_file("disks.txt");
 	if (strstr(drivelist, bootname) != NULL) {
 		return 1;
 	}
@@ -97,6 +97,11 @@ int main(int argc, char **argv) {
 		.disk = NULL,
 		.isSecureBoot = 0	
 	};
+	// Only for test
+	// <<>>
+	scanf("%s", user.username);
+
+
 	char cmd[512];
 	char cmd2[100];
 	char cmd3[200];
