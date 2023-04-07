@@ -136,7 +136,7 @@ int main(int argc, char *argv) {
 	system("lsblk | grep mmcblk");
 	while (1) {
 		printf("Type disk name (sda):");
-		scanf("%ms", &(user.disk));
+		scanf("%s", &(user.disk));
 		if (verifyBootName(user.disk)) {
 			break;
 		}
@@ -212,7 +212,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 			// Search
 			printf("Type term to search:");
 			clearString(cmd2, sizeof(cmd2));
-			scanf("%ms", cmd2);
+			scanf("%s", cmd2);
 			clearString(cmd, sizeof(cmd));
 			sprintf(cmd, "cat timelist.txt | grep %s", cmd2);
 			system(cmd);
@@ -222,7 +222,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 			clearString(cmd, sizeof(cmd));
 			printf("Type timezone Continent/Region :");
 			clearString(cmd2, sizeof(cmd2));
-			scanf("%ms", cmd2);
+			scanf("%s", cmd2);
 			sprintf(cmd, "arch-chroot /mnt ln -sf /usr/share/zoneinfo/%s /etc/localtime", cmd2);
 			if (system(cmd) == 0) {
 				break;
@@ -245,7 +245,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 	system("arch-chroot /mnt locale-gen");	
 	printf("Locale Set\n");
 	printf("Type the name of the machine you want to keep:");
-	scanf("%ms", &user.hostname);
+	scanf("%s", &user.hostname);
 	clearString(cmd2, sizeof(cmd2));
 	sprintf(cmd2, "arch-chroot /mnt echo '%s' > /etc/hostname", user.hostname);
 	system(cmd2);
@@ -259,7 +259,7 @@ mkpart primary ext4 2551MiB 100%%", *(user.disk));
 	sprintf(cmd, "arch-chroot /mnt echo '127.0.1.1    %s.localdomain    %s' > /etc/hosts", user.hostname, user.hostname);
 	system(cmd);
 	printf("Type your username:");
-	scanf("%ms", &user.name);
+	scanf("%s", &user.name);
 	clearString(cmd, sizeof(cmd));
 	sprintf(cmd, "arch-chroot /mnt useradd -m %s", *(user.name));
 	system(cmd);
